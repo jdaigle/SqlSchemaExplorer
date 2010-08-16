@@ -42,6 +42,8 @@ namespace SqlSchemaExplorer {
         public bool Matches(ColumnInfo column) {
             if (column.Name.ToUpper() != name.ToUpper())
                 return false;
+            if (column.DbType != DbType)
+                return false;
             return true;
         }
     }

@@ -81,8 +81,9 @@ namespace SqlSchemaExplorer.Utility {
                 case SqlDataType.Bit:
                     return typeof(Boolean);
                 case SqlDataType.TinyInt:
-                    return typeof(Int16);
+                    return typeof(byte);
                 case SqlDataType.SmallInt:
+                    return typeof(Int16);
                 case SqlDataType.Int:
                     return typeof(Int32);
                 case SqlDataType.BigInt:
@@ -133,9 +134,10 @@ namespace SqlSchemaExplorer.Utility {
             switch (sqlDataType) {
                 case SqlDataType.Bit:
                     return DbType.Boolean;
-                case SqlDataType.TinyInt:
-                    return DbType.Int16;
                 case SqlDataType.SmallInt:
+                    return DbType.Int16;
+                case SqlDataType.TinyInt:
+                    return DbType.Byte;
                 case SqlDataType.Int:
                     return DbType.Int32;
                 case SqlDataType.BigInt:

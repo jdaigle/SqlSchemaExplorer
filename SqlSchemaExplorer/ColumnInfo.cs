@@ -51,7 +51,7 @@ namespace SqlSchemaExplorer {
 
         public bool IsNullable { get { return isNullable; } }
 
-        public int MaximumLength { get { return maximumLength; } }        
+        public int MaximumLength { get { return maximumLength; } }
         public int NumericPrecision { get { return numericPrecision; } }
         public int NumericScale { get { return numericScale; } }
 
@@ -82,60 +82,9 @@ namespace SqlSchemaExplorer {
             }
         }
 
-        public DbType GetDbType() {
-            throw new NotImplementedException();
-        }
-
-        public Type GetDotNotType() {
-            switch (sqlDataType) {
-                case SqlDataType.Bit:
-                    return typeof(Boolean);
-                case SqlDataType.TinyInt:
-                    return typeof(Int16);
-                case SqlDataType.SmallInt:
-                case SqlDataType.Int:
-                    return typeof(Int32);
-                case SqlDataType.BigInt:
-                    return typeof(Int64);
-                case SqlDataType.SmallMoney:
-                case SqlDataType.Money:
-                case SqlDataType.Decimal:
-                case SqlDataType.Numeric:
-                    return typeof(Decimal);
-                case SqlDataType.Real:
-                    return typeof(Single);
-                case SqlDataType.Float:
-                    return typeof(Double);
-                case SqlDataType.Char:
-                case SqlDataType.NChar:
-                case SqlDataType.VarChar:
-                case SqlDataType.NVarChar:
-                case SqlDataType.Text:
-                case SqlDataType.NText:
-                case SqlDataType.VarCharMax:
-                case SqlDataType.NVarCharMax:
-                    return typeof(String);
-                case SqlDataType.UniqueIdentifier:
-                    return typeof(Guid);
-                case SqlDataType.Date:
-                case SqlDataType.SmallDateTime:
-                case SqlDataType.DateTime:
-                case SqlDataType.DateTime2:
-                    return typeof(DateTime);
-                case SqlDataType.DateTimeOffset:
-                    return typeof(DateTimeOffset);
-                case SqlDataType.Time:
-                    return typeof(TimeZone);
-                case SqlDataType.Binary:
-                case SqlDataType.VarBinary:
-                case SqlDataType.VarBinaryMax:
-                case SqlDataType.Image:
-                case SqlDataType.Timestamp:
-                    return typeof(Byte[]);
-                case SqlDataType.Variant:
-                    return typeof(Object);
-                default:
-                    throw new InvalidOperationException("Type not supported: " + sqlDataType.ToString());
+        public DbType DbType {
+            get {
+                return DatabaseTypes.GetDbType(sqlDataType);
             }
         }
     }
