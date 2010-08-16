@@ -6,35 +6,34 @@ using Microsoft.SqlServer.Management.Smo;
 using SqlSchemaExplorer.Utility;
 
 namespace SqlSchemaExplorer {
-    public class TableInfo : IColumnBag {
+    public class ViewInfo : IColumnBag {
+        public static ViewInfo ScanView(View view) {
+            var viewInfo = new ViewInfo();
 
-        public static TableInfo ScanTable(Table table) {
-            var tableInfo = new TableInfo();
+            viewInfo.name = view.Name;
+            if (view.ExtendedProperties.Contains("MS_Description") &&
+                view.ExtendedProperties["MS_Description"].Value != null)
+                viewInfo.description = view.ExtendedProperties["MS_Description"].Value.ToString();
 
-            tableInfo.name = table.Name;
-            if (table.ExtendedProperties.Contains("MS_Description") &&
-                table.ExtendedProperties["MS_Description"].Value != null)
-                tableInfo.description = table.ExtendedProperties["MS_Description"].Value.ToString();
-
-            tableInfo.indexes = new HashSet<IndexInfo>();
-            foreach (var index in table.Indexes.Cast<Index>()) {
+            viewInfo.indexes = new HashSet<IndexInfo>();
+            foreach (var index in view.Indexes.Cast<Index>()) {
                 if (index.IsSystemObject)
                     continue;
                 var indexInfo = IndexInfo.ScanIndex(index);
-                tableInfo.indexes.Add(indexInfo);
+                viewInfo.indexes.Add(indexInfo);
                 if (index.IndexKeyType == IndexKeyType.DriPrimaryKey)
-                    tableInfo.primaryKey = indexInfo;
+                    viewInfo.primaryKey = indexInfo;
             }
 
-            tableInfo.columns = new HashSet<ColumnInfo>();
-            foreach (var column in table.Columns.Cast<Column>()) {
-                tableInfo.columns.Add(ColumnInfo.ScanColumn(column));
+            viewInfo.columns = new HashSet<ColumnInfo>();
+            foreach (var column in view.Columns.Cast<Column>()) {
+                viewInfo.columns.Add(ColumnInfo.ScanColumn(column));
             }
 
-            return tableInfo;
+            return viewInfo;
         }
 
-        private TableInfo() {
+        private ViewInfo() {
             description = string.Empty;
         }
 
@@ -46,16 +45,13 @@ namespace SqlSchemaExplorer {
 
         private HashSet<ColumnInfo> columns;
 
-        public TableOrView TableOrView { get { return TableOrView.Table; } }
+        public TableOrView TableOrView { get { return TableOrView.View; } }
 
         public string Name { get { return name; } }
         public string Description { get { return description; } }
 
         public IEnumerable<IndexInfo> Indexes { get { return indexes; } }
-        public IndexInfo PrimaryKey { get { return primaryKey; } }
-
         public IEnumerable<ColumnInfo> Columns { get { return columns; } }
-        public IEnumerable<ColumnInfo> ForeignKeys { get { return columns.Where(x => x.IsForeignKey); } }
 
         public string ReadableName() {
             var singular = Inflector.Singularize(Name) ?? Name;

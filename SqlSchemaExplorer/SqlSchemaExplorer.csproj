@@ -62,11 +62,20 @@
   <ItemGroup>
     <Compile Include="ColumnInfo.cs" />
     <Compile Include="DatabaseInfo.cs" />
+    <Compile Include="IColumnBag.cs" />
     <Compile Include="IndexedColumnInfo.cs" />
     <Compile Include="IndexInfo.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SprocInfo.cs" />
+    <Compile Include="SprocParameterInfo.cs" />
+    <Compile Include="SprocResultColumnInfo.cs" />
+    <Compile Include="SprocResultInfo.cs" />
+    <Compile Include="SprocResultScanner.cs" />
     <Compile Include="TableInfo.cs" />
+    <Compile Include="TableOrView.cs" />
+    <Compile Include="Utility\DatabaseTypes.cs" />
     <Compile Include="Utility\Inflector.cs" />
+    <Compile Include="ViewInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -29,22 +29,22 @@ namespace SqlSchemaExplorer {
             return columnInfo;
         }
 
-        public ColumnInfo() {
+        protected ColumnInfo() {
             description = string.Empty;
             defaultValue = string.Empty;
         }
 
-        private string name;
-        private string description;
-        private bool isNullable;
-        private SqlDataType sqlDataType;
-        private int maximumLength;
-        private int numericPrecision;
-        private int numericScale;
-        private string defaultValue;
-        private bool isPrimaryKey;
-        private bool isIdentity;
-        private bool isForeignKey;
+        protected string name;
+        protected string description;
+        protected bool isNullable;
+        protected SqlDataType sqlDataType;
+        protected int maximumLength;
+        protected int numericPrecision;
+        protected int numericScale;
+        protected string defaultValue;
+        protected bool isPrimaryKey;
+        protected bool isIdentity;
+        protected bool isForeignKey;
 
         public string Name { get { return name; } }
         public string Description { get { return description; } }

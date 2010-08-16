@@ -16,6 +16,8 @@ namespace SqlSchemaExplorer {
         private readonly Database database;
         private bool doneScanning;
         private HashSet<TableInfo> tables;
+        private HashSet<ViewInfo> views;
+        private HashSet<SprocInfo> sprocs;
 
         public DatabaseInfo(SqlConnection connection) {
             var serverConnection = new ServerConnection(connection);
@@ -30,6 +32,22 @@ namespace SqlSchemaExplorer {
                     continue;
                 tables.Add(TableInfo.ScanTable(table));
             }
+
+            views = new HashSet<ViewInfo>();
+            foreach (var view in database.Views.Cast<View>()) {
+                if (view.IsSystemObject)
+                    continue;
+                views.Add(ViewInfo.ScanView(view));
+            }
+
+            sprocs = new HashSet<SprocInfo>();
+            foreach (var sproc in database.StoredProcedures.Cast<StoredProcedure>()) {
+                if (sproc.IsSystemObject)
+                    continue;
+                sprocs.Add(SprocInfo.ScanSproc(sproc, new SprocResultScanner(database.Parent.ConnectionContext.SqlConnectionObject)));
+            }
+
+
             doneScanning = true;
         }
 
@@ -38,10 +56,24 @@ namespace SqlSchemaExplorer {
                 Scan();
         }
 
-        public IEnumerable<TableInfo> TableInfos {
+        public IEnumerable<TableInfo> Tables {
             get {
                 EnsureDoneScanning();
                 return tables;
+            }
+        }
+
+        public IEnumerable<ViewInfo> Views {
+            get {
+                EnsureDoneScanning();
+                return views;
+            }
+        }
+
+        public IEnumerable<SprocInfo> Sprocs {
+            get {
+                EnsureDoneScanning();
+                return sprocs;
             }
         }
     }
