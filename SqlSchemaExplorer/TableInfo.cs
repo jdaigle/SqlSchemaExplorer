@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.SqlServer.Management.Smo;
+using SqlSchemaExplorer.Utility;
 
 namespace SqlSchemaExplorer {
     public class TableInfo {
@@ -53,5 +54,10 @@ namespace SqlSchemaExplorer {
 
         public IEnumerable<ColumnInfo> Columns { get { return columns; } }
         public IEnumerable<ColumnInfo> ForeignKeys { get { return columns.Where(x => x.IsForeignKey); } }
+
+        public string ReadableName() {
+            var singular = Inflector.Singularize(Name) ?? Name;
+            return (Inflector.Pascalize(singular) ?? singular).Replace(" ", "");
+        }
     }
 }

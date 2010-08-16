@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.SqlServer.Management.Smo;
+using SqlSchemaExplorer.Utility;
 
 namespace SqlSchemaExplorer {
     public class IndexedColumnInfo {
@@ -17,5 +18,10 @@ namespace SqlSchemaExplorer {
         private string name;
 
         public string Name { get { return name; } }
+
+        public string ReadableName() {
+            var singular = Inflector.Singularize(Name) ?? Name;
+            return (Inflector.Pascalize(singular) ?? singular).Replace(" ", "");
+        }
     }
 }

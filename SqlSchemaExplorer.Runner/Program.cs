@@ -14,6 +14,8 @@ namespace SqlSchemaExplorer.Runner {
             var columns = tables[2].Columns.ToArray();
             var indexes = tables[2].Indexes.ToArray();
             var foreignKeys = tables[2].ForeignKeys.ToArray();
+
+            var tableNames = databaseInfo.TableInfos.Select(x => x.ReadableName()).ToArray();
         }
     }
 }

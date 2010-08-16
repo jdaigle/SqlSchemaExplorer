@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using Microsoft.SqlServer.Management.Smo;
 using System.Data;
+using SqlSchemaExplorer.Utility;
 
 namespace SqlSchemaExplorer {
     public class ColumnInfo {
@@ -58,6 +59,11 @@ namespace SqlSchemaExplorer {
         public bool IsIdentity { get { return isIdentity; } }
         public bool IsReadOnly { get { return isIdentity; } }
         public bool IsForeignKey { get { return isForeignKey; } }
+
+        public string ReadableName() {
+            var singular = Inflector.Singularize(Name) ?? Name;
+            return (Inflector.Pascalize(singular) ?? singular).Replace(" ", "");
+        }
 
         public bool IsNumeric() {
             switch (sqlDataType) {
