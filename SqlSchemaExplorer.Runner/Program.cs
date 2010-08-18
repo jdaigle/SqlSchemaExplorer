@@ -11,9 +11,26 @@ namespace SqlSchemaExplorer.Runner {
 
             var databaseInfo = DatabaseInfo.Load(new SqlConnection(connectionString));
             var tables = databaseInfo.Tables.ToArray();
+
+            foreach (var item in tables) {
+                foreach (var col in item.Columns) {
+                    if (col.DbType == System.Data.DbType.Object)
+                        Console.Out.Write("Asf");
+                    if (col.MaximumLength == 0)
+                        Console.Out.Write("Asf");
+                }
+            }
+
+            
             var views = databaseInfo.Views.ToArray();
             var columns = tables[2].Columns.ToArray();
             var indexes = tables[2].Indexes.ToArray();
+
+            string mergedColumnNames = string.Empty;
+            foreach (var item in indexes[0].IndexedColumns) {
+                mergedColumnNames += item.ReadableName();
+            }
+
             var foreignKeys = tables[2].ForeignKeys.ToArray();
 
             var tableNames = databaseInfo.Tables.Select(x => x.ReadableName()).ToArray();

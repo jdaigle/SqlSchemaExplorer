@@ -15,19 +15,19 @@ namespace SqlSchemaExplorer {
                 view.ExtendedProperties["MS_Description"].Value != null)
                 viewInfo.description = view.ExtendedProperties["MS_Description"].Value.ToString();
 
+            viewInfo.columns = new HashSet<ColumnInfo>();
+            foreach (var column in view.Columns.Cast<Column>()) {
+                viewInfo.columns.Add(ColumnInfo.ScanColumn(column));
+            }
+
             viewInfo.indexes = new HashSet<IndexInfo>();
             foreach (var index in view.Indexes.Cast<Index>()) {
                 if (index.IsSystemObject)
                     continue;
-                var indexInfo = IndexInfo.ScanIndex(index);
+                var indexInfo = IndexInfo.ScanIndex(index, viewInfo.columns);
                 viewInfo.indexes.Add(indexInfo);
                 if (index.IndexKeyType == IndexKeyType.DriPrimaryKey)
                     viewInfo.primaryKey = indexInfo;
-            }
-
-            viewInfo.columns = new HashSet<ColumnInfo>();
-            foreach (var column in view.Columns.Cast<Column>()) {
-                viewInfo.columns.Add(ColumnInfo.ScanColumn(column));
             }
 
             return viewInfo;

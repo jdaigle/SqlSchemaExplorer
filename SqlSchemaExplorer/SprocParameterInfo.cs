@@ -13,8 +13,8 @@ namespace SqlSchemaExplorer {
             if (param.ExtendedProperties.Contains("MS_Description") &&
                 param.ExtendedProperties["MS_Description"].Value != null)
                 sprocParameterInfo.description = param.ExtendedProperties["MS_Description"].Value.ToString();
-            
-            sprocParameterInfo.sqlDataType = param.DataType.SqlDataType;
+
+            sprocParameterInfo.nativeType = param.DataType.SqlDataType.ToString();
             sprocParameterInfo.maximumLength = param.DataType.MaximumLength;
             sprocParameterInfo.numericPrecision = param.DataType.NumericPrecision;
             sprocParameterInfo.numericScale = param.DataType.NumericScale;

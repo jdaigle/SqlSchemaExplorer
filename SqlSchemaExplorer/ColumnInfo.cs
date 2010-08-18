@@ -17,7 +17,7 @@ namespace SqlSchemaExplorer {
                 columnInfo.description = column.ExtendedProperties["MS_Description"].Value.ToString();
 
             columnInfo.isNullable = column.Nullable;
-            columnInfo.sqlDataType = column.DataType.SqlDataType;
+            columnInfo.nativeType = column.DataType.SqlDataType.ToString();
             columnInfo.maximumLength = column.DataType.MaximumLength;
             columnInfo.numericPrecision = column.DataType.NumericPrecision;
             columnInfo.numericScale = column.DataType.NumericScale;
@@ -37,7 +37,7 @@ namespace SqlSchemaExplorer {
         protected string name;
         protected string description;
         protected bool isNullable;
-        protected SqlDataType sqlDataType;
+        protected string nativeType;
         protected int maximumLength;
         protected int numericPrecision;
         protected int numericScale;
@@ -65,26 +65,52 @@ namespace SqlSchemaExplorer {
             return (Inflector.Pascalize(singular) ?? singular).Replace(" ", "");
         }
 
-        public bool IsNumeric() {
-            switch (sqlDataType) {
-                case SqlDataType.TinyInt:
-                case SqlDataType.SmallInt:
-                case SqlDataType.Int:
-                case SqlDataType.BigInt:
-                case SqlDataType.SmallMoney:
-                case SqlDataType.Money:
-                case SqlDataType.Decimal:
-                case SqlDataType.Numeric:
-                case SqlDataType.Real:
-                case SqlDataType.Float:
+        public bool HasLength() {
+            switch (DbType) {
+                case System.Data.DbType.AnsiString:
+                case System.Data.DbType.AnsiStringFixedLength:
+                case System.Data.DbType.Binary:
+                case System.Data.DbType.String:
+                case System.Data.DbType.StringFixedLength:
+                case System.Data.DbType.VarNumeric:
                     return true;
                 default: return false;
             }
         }
 
+        public string GetNativeType() {
+            string type = NativeType;
+            if (HasLength())
+                type += " (" + MaximumLength + ")";
+            return type;
+        }
+
+        //public bool IsNumeric() {
+        //    switch (sqlDataType) {
+        //        case SqlDataType.TinyInt:
+        //        case SqlDataType.SmallInt:
+        //        case SqlDataType.Int:
+        //        case SqlDataType.BigInt:
+        //        case SqlDataType.SmallMoney:
+        //        case SqlDataType.Money:
+        //        case SqlDataType.Decimal:
+        //        case SqlDataType.Numeric:
+        //        case SqlDataType.Real:
+        //        case SqlDataType.Float:
+        //            return true;
+        //        default: return false;
+        //    }
+        //}
+
+        public string NativeType {
+            get {
+                return nativeType;
+            }
+        }
+
         public DbType DbType {
             get {
-                return DatabaseTypes.GetDbType(sqlDataType);
+                return DatabaseTypes.GetDbType(NativeType);
             }
         }
     }
